@@ -2,9 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" http-equiv="Content-Type" content="text/html">
-    <title>校园论坛</title>
+    <title>发布 — 校园论坛</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/bbs.css">
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body>
@@ -45,5 +46,42 @@
         </div>
     </div>
 </nav>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>发起</h2>
+            <hr>
+            <form action="/publish" method="post">
+                <div class="form-group">
+                    <label for="title">问题标题：</label>
+                    <input type="text" th:value="${title}" name="title" id="title" class="form-control"
+                           placeholder="输入文章标题......">
+                </div>
+                <div class="form-group">
+                    <label for="description">问题描述：</label>
+                    <textarea name="description" th:value="${description}" id="description" class="form-control"
+                              cols="20" rows="18"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tag">添加标签：</label>
+                    <input type="text" th:value="${tag}" name="tag" id="tag" class="form-control"
+                           placeholder="输入标签，以逗号隔开">
+                </div>
+                <div class="container-fluid main">
+                    <div class="row">
+                        <div class="alert alert-danger col-lg-9 col-md-12 col-sm-12 col-xs-12" th:if="${error != null}"
+                             th:text="${error}"></div>
+                        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                            <button type="submit" class="btn btn-success btn-publish">发布</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>问题发布指南</h3>
+        </div>
+    </div>
+</div>
 </body>
 </html>
