@@ -1,15 +1,29 @@
 body {
     background-color: #efefef;
 }
+
 .main {
     background-color: white;
     margin: 30px;
 }
+
 .btn-publish {
     float: right;
     margin-bottom: 15px;
 }
+
 .register {
     margin: 50px;
     padding: 50px;
+}
+
+.media-object {
+    width: 45px;
+    height: 45px;
+}
+
+.text-desc {
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
 }

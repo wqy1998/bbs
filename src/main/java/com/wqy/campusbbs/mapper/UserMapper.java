@@ -22,4 +22,7 @@ public interface UserMapper {
 
     @Select("select * from user where email = #{email} and password = #{password}")
     User findByEmailAndPassword(User user);
+
+    @Select("select * from user where id = #{id}")
+    User findById(@Param("id") Integer creator);
 }
