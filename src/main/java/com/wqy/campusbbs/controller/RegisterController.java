@@ -55,13 +55,15 @@ public class RegisterController {
         }
         user = new User();
         String token = UUID.randomUUID().toString();
+        user.setEmail(email);
+        String accountId = "mail" + user.getEmail().split("@")[0];
         user.setToken(token);
         user.setName(name);
         user.setPassword(inputPassword);
         user.setGmtCreate(System.currentTimeMillis());
         user.setGmtModified(user.getGmtCreate());
-        user.setAccountId("1,手动注册");
-        user.setEmail(email);
+        user.setAccountId(accountId);
+        user.setAvatarUrl("https://avatars.githubusercontent.com/u/45116739?v=4");
         userMapper.register(user);
         response.addCookie(new Cookie("token", token));
         return "redirect:/";

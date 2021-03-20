@@ -2,6 +2,7 @@ package com.wqy.campusbbs.controller;
 
 import com.wqy.campusbbs.mapper.UserMapper;
 import com.wqy.campusbbs.model.User;
+import com.wqy.campusbbs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
+
 @Controller
 public class LoginController {
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping("/login")
     public String toLogin() {
@@ -39,7 +45,10 @@ public class LoginController {
             model.addAttribute("error", "邮箱或密码错误");
             return "login";
         }
-        String token = loginUser.getToken();
+        String token = UUID.randomUUID().toString();
+        loginUser.setToken(token);
+        loginUser.setAvatarUrl("https://avatars.githubusercontent.com/u/45116739?v=4");
+        userService.createOrUpdate(loginUser);
         response.addCookie(new Cookie("token", token));
         return "redirect:/";
     }
