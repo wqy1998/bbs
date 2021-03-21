@@ -2,6 +2,8 @@ package com.wqy.campusbbs.service;
 
 import com.wqy.campusbbs.dto.PaginationDTO;
 import com.wqy.campusbbs.dto.QuestionDTO;
+import com.wqy.campusbbs.exception.CustomizeErrorCode;
+import com.wqy.campusbbs.exception.CustomizeException;
 import com.wqy.campusbbs.mapper.QuestionMapper;
 import com.wqy.campusbbs.mapper.UserMapper;
 import com.wqy.campusbbs.model.Question;
@@ -101,6 +103,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -123,7 +128,10 @@ public class QuestionService {
             updateQuestion.setGmtModified(System.currentTimeMillis());
             QuestionExample example = new QuestionExample();
             example.createCriteria().andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion, example);
+            int update = questionMapper.updateByExampleSelective(updateQuestion, example);
+            if (update != 1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 }
