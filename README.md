@@ -10,7 +10,7 @@
 [BootStrap](https://v3.bootcss.com/getting-started/)  
 [Spring](https://docs.spring.io/spring-boot/docs/2.0.0.RC1/reference/htmlsingle/#boot-features-embedded-database-support)  
 [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html)  
-
+[Mybatis generator](https://mybatis.org/generator/running/runningWithMaven.html)  
 ## 工具
 
 [Git](https://git-scm.com/download)  
@@ -51,4 +51,7 @@ create table question
     constraint QUESTION_PK
         primary key (id)
 );
+```
+```bash
+mvn -Dmybatis.generator.overwrite=true  mybatis-generator:generate
 ```

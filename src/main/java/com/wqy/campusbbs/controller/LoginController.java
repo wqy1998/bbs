@@ -2,6 +2,7 @@ package com.wqy.campusbbs.controller;
 
 import com.wqy.campusbbs.mapper.UserMapper;
 import com.wqy.campusbbs.model.User;
+import com.wqy.campusbbs.model.UserExample;
 import com.wqy.campusbbs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -40,12 +42,15 @@ public class LoginController {
         User user = new User();
         user.setEmail(email);
         user.setPassword(password);
-        User loginUser = userMapper.findByEmailAndPassword(user);
-        if (loginUser == null) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andEmailEqualTo(email).andPasswordEqualTo(password);
+        List<User> users = userMapper.selectByExample(userExample);
+        if (users.size() == 0) {
             model.addAttribute("error", "邮箱或密码错误");
             return "login";
         }
         String token = UUID.randomUUID().toString();
+        User loginUser = users.get(0);
         loginUser.setToken(token);
         loginUser.setAvatarUrl("https://avatars.githubusercontent.com/u/45116739?v=4");
         userService.createOrUpdate(loginUser);

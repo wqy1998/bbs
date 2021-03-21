@@ -2,6 +2,7 @@ package com.wqy.campusbbs.controller;
 
 import com.wqy.campusbbs.mapper.UserMapper;
 import com.wqy.campusbbs.model.User;
+import com.wqy.campusbbs.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -48,12 +50,14 @@ public class RegisterController {
             model.addAttribute("error", "两次密码不一致");
             return "register";
         }
-        User user = userMapper.findByEmail(email);
-        if (user != null) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andEmailEqualTo(email);
+        List<User> users = userMapper.selectByExample(userExample);
+        if (users.size() != 0) {
             model.addAttribute("error", "邮箱 " + name + " 已被注册");
             return "register";
         }
-        user = new User();
+        User user = new User();
         String token = UUID.randomUUID().toString();
         user.setEmail(email);
         String accountId = "mail" + user.getEmail().split("@")[0];
@@ -64,7 +68,7 @@ public class RegisterController {
         user.setGmtModified(user.getGmtCreate());
         user.setAccountId(accountId);
         user.setAvatarUrl("https://avatars.githubusercontent.com/u/45116739?v=4");
-        userMapper.register(user);
+        userMapper.insert(user);
         response.addCookie(new Cookie("token", token));
         return "redirect:/";
     }
