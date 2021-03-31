@@ -2,7 +2,6 @@ package com.wqy.campusbbs.controller;
 
 import com.wqy.campusbbs.dto.AccessTokenDTO;
 import com.wqy.campusbbs.dto.GitHubUser;
-import com.wqy.campusbbs.mapper.UserMapper;
 import com.wqy.campusbbs.model.User;
 import com.wqy.campusbbs.provider.GitHubProvider;
 import com.wqy.campusbbs.service.UserService;
