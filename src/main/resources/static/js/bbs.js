@@ -107,3 +107,19 @@ function collapseComments(e) {
         }
     }
 }
+
+function showSelectTag() {
+    $("#select-tag").show();
+}
+
+function selectTag(e) {
+    const value = e.getAttribute("data-tag");
+    const previous = $("#tag").val();
+    if (previous.indexOf(value) === -1) {
+        if (previous) {
+            $("#tag").val(previous + ',' + value);
+        } else {
+            $("#tag").val(value);
+        }
+    }
+}

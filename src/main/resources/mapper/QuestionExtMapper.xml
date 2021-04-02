@@ -22,4 +22,10 @@
         set COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType=INTEGER}
         where ID = #{id}
     </update>
+    <select id="selectRelated" parameterType="com.wqy.campusbbs.model.Question" resultMap="BaseResultMap">
+        select *
+        from QUESTION
+        where ID != #{id}
+          and TAG regexp #{tag}
+    </select>
 </mapper>
