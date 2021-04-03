@@ -10,7 +10,7 @@
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <script type="application/javascript">
-    window.onload = function () {
+    window.onload = function (e) {
         const closable = window.localStorage.getItem("closable");
         if (closable === "true") {
             window.close();
@@ -36,7 +36,8 @@
                     <h4 class="media-heading">
                         <a th:href="@{'/question/' + ${question.id}}" th:text="${question.title}"></a>
                     </h4>
-                    <span th:text="${question.description}"></span><br>
+                    <span th:if="${#strings.length(question.description) > 30}" th:text="${#strings.substring(question.description, 0,30) + ' ...'}"></span>
+                    <span th:if="${#strings.length(question.description) <= 30}" th:text="${question.description}"></span><br>
                     <span class="text-desc">
                         <span th:text="${question.commentCount}"></span> 个回复 · <span
                             th:text="${question.viewCount}"></span> 次浏览 · <span
