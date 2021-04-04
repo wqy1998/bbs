@@ -67,7 +67,7 @@ public class RegisterController {
         user.setGmtCreate(System.currentTimeMillis());
         user.setGmtModified(user.getGmtCreate());
         user.setAccountId(accountId);
-        user.setAvatarUrl("https://avatars.githubusercontent.com/u/45116739?v=4");
+        user.setAvatarUrl("/images/default-avatar.png");
         userMapper.insert(user);
         response.addCookie(new Cookie("token", token));
         return "redirect:/";

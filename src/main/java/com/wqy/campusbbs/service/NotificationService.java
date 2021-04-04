@@ -76,7 +76,7 @@ public class NotificationService {
             throw new CustomizeException(CustomizeErrorCode.NOTIFICATION_NOT_FOUND);
         }
         if (!notification.getReceiver().equals(user.getId())) {
-            throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL  );
+            throw new CustomizeException(CustomizeErrorCode.READ_NOTIFICATION_FAIL);
         }
         notification.setStatus(NotificationStatusEnum.READ.getStatus());
         notificationMapper.updateByPrimaryKey(notification);

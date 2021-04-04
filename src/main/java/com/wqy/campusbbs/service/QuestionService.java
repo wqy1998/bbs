@@ -2,6 +2,7 @@ package com.wqy.campusbbs.service;
 
 import com.wqy.campusbbs.dto.PaginationDTO;
 import com.wqy.campusbbs.dto.QuestionDTO;
+import com.wqy.campusbbs.dto.QuestionQueryDTO;
 import com.wqy.campusbbs.exception.CustomizeErrorCode;
 import com.wqy.campusbbs.exception.CustomizeException;
 import com.wqy.campusbbs.mapper.QuestionExtMapper;
@@ -31,10 +32,15 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search, Integer page, Integer size) {
+        if (StringUtils.isNotBlank(search)) {
+            search = search.replaceAll(" ", "|");
+        }
         PaginationDTO paginationDTO = new PaginationDTO();
         int totalPage;
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -52,9 +58,9 @@ public class QuestionService {
 
         paginationDTO.setPagination(totalPage, page);
         int offset = size * (page - 1);
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(questionExample, new RowBounds(offset, size));
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offset);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
