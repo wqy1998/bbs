@@ -10,6 +10,7 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     CONTENT_IS_EMPTY(2007, "输入内容不能为空"),
     READ_NOTIFICATION_FAIL(2008, "非法读取他人信息"),
     NOTIFICATION_NOT_FOUND(2009, "消息不翼而飞了"),
+    PUBLISH_USER_WRONG(2010, "您没有权限修改此问题"),
     ;
 
     private Integer code;

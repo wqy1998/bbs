@@ -2,6 +2,8 @@ package com.wqy.campusbbs.controller;
 
 import com.wqy.campusbbs.cache.TagCache;
 import com.wqy.campusbbs.dto.QuestionDTO;
+import com.wqy.campusbbs.exception.CustomizeErrorCode;
+import com.wqy.campusbbs.exception.CustomizeException;
 import com.wqy.campusbbs.model.Question;
 import com.wqy.campusbbs.model.User;
 import com.wqy.campusbbs.service.QuestionService;
@@ -23,8 +25,13 @@ public class PublishController {
 
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id") Long id,
+                       HttpServletRequest request,
                        Model model) {
         QuestionDTO question = questionService.getById(id);
+        User user = (User) request.getSession().getAttribute("user");
+        if (!user.getId().equals(question.getCreator())) {
+            throw new CustomizeException(CustomizeErrorCode.PUBLISH_USER_WRONG);
+        }
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
@@ -73,7 +80,7 @@ public class PublishController {
             return "publish";
         }
         Question question = new Question();
-        question.setTitle(title);
+        question.setTitle(title.trim());
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
