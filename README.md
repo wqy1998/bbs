@@ -38,69 +38,66 @@ create table USER
 ```
 
 ```sql
-create table question
+create table USER
 (
-    id            int auto_increment,
-    title         varchar(50),
-    description   text,
-    gmt_create    bigint,
-    gmt_modified  bigint,
-    creator       int,
-    comment_count int default 0,
-    view_count    int default 0,
-    like_count    int default 0,
-    tag           varchar(256),
-    constraint QUESTION_PK
-        primary key (id)
+    ID           BIGINT auto_increment,
+    ACCOUNT_ID   VARCHAR(100),
+    NAME         VARCHAR(50),
+    TOKEN        CHAR(36),
+    GMT_CREATE   BIGINT,
+    GMT_MODIFIED BIGINT,
+    BIO          VARCHAR(256),
+    AVATAR_URL   VARCHAR(100),
+    PASSWORD     VARCHAR(20),
+    EMAIL        VARCHAR(100),
+    constraint USER_PK
+        primary key (ID)
 );
+
+create unique index USER_EMAIL_UINDEX
+    on USER (EMAIL);
 ```
 
 ```sql
-create table comment
+create table COMMENT
 (
-    id           bigint auto_increment,
-    parent_id    bigint           not null,
-    type         int              not null,
-    commentator  int              not null,
-    gmt_create   bigint           not null,
-    gmt_modified bigint           not null,
-    like_count   bigint default 0 not null,
+    ID            BIGINT auto_increment,
+    PARENT_ID     BIGINT        not null,
+    TYPE          INT           not null,
+    COMMENTATOR   BIGINT        not null,
+    GMT_CREATE    BIGINT        not null,
+    GMT_MODIFIED  BIGINT        not null,
+    LIKE_COUNT    INT default 0 not null,
+    CONTENT       VARCHAR(1024) not null,
+    COMMENT_COUNT INT default 0,
     constraint COMMENT_PK
-        primary key (id)
+        primary key (ID)
 );
 
-comment
-on column comment.parent_id is '父类id';
+comment on column COMMENT.PARENT_ID is '父类id';
 
-comment
-on column comment.type is '父类类型';
+comment on column COMMENT.TYPE is '父类类型';
 
-comment
-on column comment.commentator is '评论人id';
+comment on column COMMENT.GMT_CREATE is '创建时间';
 
-comment
-on column comment.gmt_create is '创建时间';
-
-comment
-on column comment.gmt_modified is '更新时间';
-
-
+comment on column COMMENT.GMT_MODIFIED is '更新时间';
 ```
 
 ```sql
-create table notification
+create table NOTIFICATION
 (
-	id bigint auto_increment,
-	notifier bigint not null,
-	receiver bigint not null,
-	outer_id bigint not null,
-	type int not null,
-	gmt_create bigint not null,
-	status int default 0 not null,
-	constraint NOTIFICATION_PK
-		primary key (id)
+    ID            BIGINT auto_increment,
+    NOTIFIER      BIGINT        not null,
+    RECEIVER      BIGINT        not null,
+    OUTER_ID      BIGINT        not null,
+    TYPE          INT           not null,
+    GMT_CREATE    BIGINT        not null,
+    STATUS        INT default 0 not null,
+    NOTIFIER_NAME VARCHAR(100),
+    OUTER_TITLE   VARCHAR(256),
+    constraint NOTIFICATION_PK
+        primary key (ID)
 );
-
 ```
 
 ```bash
