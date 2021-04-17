@@ -34,6 +34,8 @@
         <table tableName="question" domainObjectName="Question"/>
         <table tableName="comment" domainObjectName="Comment"/>
         <table tableName="notification" domainObjectName="Notification"/>
+        <table tableName="specialty" domainObjectName="Specialty"/>
+        <table tableName="student_class" domainObjectName="StudentClass"/>
 
     </context>
 </generatorConfiguration>

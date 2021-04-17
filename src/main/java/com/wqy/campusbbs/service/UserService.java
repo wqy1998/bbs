@@ -15,7 +15,7 @@ public class UserService {
 
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andAccountIdEqualTo(user.getAccountId());
+        userExample.createCriteria().andEmailEqualTo(user.getEmail());
         List<User> users = userMapper.selectByExample(userExample);
         if (users.size() == 0) {
             //插入

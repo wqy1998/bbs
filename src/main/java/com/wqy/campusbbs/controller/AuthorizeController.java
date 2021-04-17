@@ -51,7 +51,6 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(gitHubUser.getName());
-            user.setAccountId("github" + gitHubUser.getId());
             user.setAvatarUrl(gitHubUser.getAvatar_url());
             userService.createOrUpdate(user);
             response.addCookie(new Cookie("token", token));
