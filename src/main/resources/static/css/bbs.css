@@ -4,12 +4,20 @@ body {
 
 .main {
     background-color: white;
-    margin: 30px;
+    margin: 80px 30px 30px;
+}
+
+.left-part {
+    border-right: solid 1px #eee;
 }
 
 .btn-publish {
     float: right;
     margin-bottom: 15px;
+}
+
+.btn-edit {
+    float: right;
 }
 
 .register {
@@ -45,8 +53,8 @@ body {
 }
 
 .question-related {
-    line-height: 20px;
-    font-size: 12px;
+    line-height: 24px;
+    font-size: 14px;
     list-style: none;
     padding-left: 0;
 }

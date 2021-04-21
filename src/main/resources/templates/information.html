@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" http-equiv="Content-Type" content="text/html">
+    <title th:text="${user.name + '的个人资料 - 校园论坛'}"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/bbs.css">
+    <script src="/js/jquery-3.5.1.min.js" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<div th:insert="navigation :: nav"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 left-part">
+            <h2 th:if="${self == true}" th:text="${'我的个人资料（' + role + '）'}"></h2>
+            <h2 th:if="${self == null}" th:text="${user.name + '的个人资料（' + role + '）'}"></h2>
+            <hr>
+            <div class="form-horizontal register">
+                <div class="form-group">
+                    <label for="name" class="col-sm-4 control-label">用户名</label>
+                    <div class="col-sm-4">
+                        <input type="text" th:class="form-control" id="name" placeholder="输入用户名" name="name"
+                               th:value="${user.name}" disabled="disabled">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-4 control-label">邮箱</label>
+                    <div class="col-sm-4">
+                        <input type="email" th:class="form-control" id="email" placeholder="输入新邮箱" name="email"
+                               th:value="${user.email}" disabled="disabled">
+                    </div>
+                </div>
+                <div class="form-group" th:if="${user.role == 1 || user.role == 2}">
+                    <label for="specialty" class="col-sm-4 control-label">专业</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control disabled" id="specialty" name="specialty"
+                               th:value="${specialty}" disabled="disabled">
+                    </div>
+                </div>
+                <div class="form-group" th:if="${user.role == 1}">
+                    <label for="studentClass" class="col-sm-4 control-label">班级</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control disabled" id="studentClass" name="studentClass"
+                               th:value="${studentClass}" disabled="disabled">
+                    </div>
+                </div>
+
+                <!--修改个人信息-->
+                <div class="panel-group" id="edit" role="tablist" aria-multiselectable="true" th:if="${self == true}">
+                    <!--修改用户名-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingName">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#edit" href="#editUserName"
+                                   aria-expanded="true" aria-controls="editUserName">
+                                    修改用户名
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="editUserName" class="panel-collapse collapse" role="tabpanel"
+                             aria-labelledby="headingName">
+                            <div class="panel-body">
+                                <form class="form-horizontal" th:action="${'/information/' + user.id + '/editName'}" method="post">
+                                    <div class="form-group">
+                                        <label for="newName" class="col-sm-4 control-label">输入新用户名</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" id="newName"
+                                                   placeholder="输入新用户名" name="newName">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="action" value="editUserName">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <button type="submit" class="btn btn-success btn-edit">修改</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--修改邮箱-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingEmail">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#edit" href="#editEmail"
+                                   aria-expanded="true" aria-controls="editEmail">
+                                    修改邮箱
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="editEmail" class="panel-collapse collapse" role="tabpanel"
+                             aria-labelledby="headingEmail">
+                            <form class="form-horizontal" th:action="${'/information/' + user.id +'/editEmail'}" method="post">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label for="newEmail" class="col-sm-4 control-label">输入新邮箱</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" id="newEmail"
+                                                   placeholder="输入新邮箱" name="newEmail">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="action" value="editEmail">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <button type="submit" class="btn btn-success btn-edit">修改</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--修改密码-->
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingPassword">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#edit" href="#editPassword"
+                                   aria-expanded="true" aria-controls="editPassword">
+                                    修改密码
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="editPassword" class="panel-collapse collapse" role="tabpanel"
+                             aria-labelledby="headingPassword">
+                            <form class="form-horizontal" th:action="${'/information/' + user.id + '/editPassword'}" method="post">
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label for="inputNewPassword" class="col-sm-4 control-label">输入新密码</label>
+                                        <div class="col-sm-4">
+                                            <input type="password" class="form-control" id="inputNewPassword"
+                                                   placeholder="输入密码" name="inputNewPassword">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmNewPassword" class="col-sm-4 control-label">确认新密码</label>
+                                        <div class="col-sm-4">
+                                            <input type="password" class="form-control" id="confirmNewPassword"
+                                                   placeholder="确认密码" name="confirmNewPassword">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="action" value="editPassword">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <button type="submit" class="btn btn-success btn-edit">修改</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${error != null}"
+                             th:text="${error}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3 class="question-title">最新发表</h3>
+            <div th:if="${questions.size() == 0}">暂无发表</div>
+            <ul class="question-related">
+                <li th:each="question : ${questions}">
+                    <a th:href="@{'/question/' + ${question.id}}" th:text="${question.title}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

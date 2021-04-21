@@ -11,6 +11,7 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     READ_NOTIFICATION_FAIL(2008, "非法读取他人信息"),
     NOTIFICATION_NOT_FOUND(2009, "消息不翼而飞了"),
     PUBLISH_USER_WRONG(2010, "您没有权限修改此问题"),
+    USER_NOT_EXIST(2011, "该用户不存在"),
     ;
 
     private Integer code;

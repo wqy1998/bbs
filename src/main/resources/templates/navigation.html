@@ -6,7 +6,7 @@
 </head>
 <body>
 <div th:fragment="nav">
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -35,7 +35,7 @@
                             <span th:text="${session.user.name}"></span><span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/profile/questions">我的问题</a></li>
-                            <li><a href="#">个人资料</a></li>
+                            <li><a th:href="@{'/information/' + ${session.user.id}}">个人资料</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="/logout">退出登录</a></li>
                         </ul>
