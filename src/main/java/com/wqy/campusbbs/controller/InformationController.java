@@ -1,11 +1,15 @@
 package com.wqy.campusbbs.controller;
 
+import com.wqy.campusbbs.enums.UserRoleEnum;
 import com.wqy.campusbbs.exception.CustomizeErrorCode;
 import com.wqy.campusbbs.exception.CustomizeException;
 import com.wqy.campusbbs.mapper.UserMapper;
+import com.wqy.campusbbs.model.Specialty;
+import com.wqy.campusbbs.model.StudentClass;
 import com.wqy.campusbbs.model.User;
 import com.wqy.campusbbs.model.UserExample;
 import com.wqy.campusbbs.service.InformationService;
+import com.wqy.campusbbs.service.StudentClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class InformationController {
@@ -26,24 +31,37 @@ public class InformationController {
     @Autowired
     private InformationService informationService;
 
+    @Autowired
+    private StudentClassService studentClassService;
+
     @GetMapping("/information/{id}")
     public String information(@PathVariable(name = "id") String id,
                               Model model,
                               HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
+        Map<Specialty, List<StudentClass>> specialties = studentClassService.listMap();
+        model.addAttribute("specialties", specialties);
+
         if (user == null) {
             return "redirect:/";
         }
+        //判断是否是查询本人信息
         if (Long.parseLong(id) != user.getId()) {
+            //查询非本人信息
             UserExample userExample = new UserExample();
             userExample.createCriteria().andIdEqualTo(Long.parseLong(id));
             List<User> users = userMapper.selectByExample(userExample);
+            //查询的用户id不存在
             if (users.size() == 0) {
                 throw new CustomizeException(CustomizeErrorCode.USER_NOT_EXIST);
             }
-            user = users.get(0);
-            informationService.searchInformation(model, user);
+            User user1 = users.get(0);
+            if (user.getRole() == UserRoleEnum.ADMINISTRATOR.getType() || (user.getRole() == UserRoleEnum.TEACHER.getType() && user1.getRole() == UserRoleEnum.STUDENT.getType())) {
+                model.addAttribute("edit", true);
+            }
+            informationService.searchInformation(model, user1);
         } else {
+            //查询本人信息
             informationService.searchInformation(model, user);
             model.addAttribute("self", true);
         }
@@ -56,7 +74,7 @@ public class InformationController {
                            @RequestParam("action") String action,
                            Model model,
                            HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
+        User user = userMapper.selectByPrimaryKey(Long.parseLong(id));
         if (action.equals("editUserName")) {
             //修改用户名
             if (user.getName().equals(newName)) {
@@ -98,9 +116,8 @@ public class InformationController {
     public String editEmail(@PathVariable String id,
                             @RequestParam("newEmail") String newEmail,
                             @RequestParam("action") String action,
-                            Model model,
-                            HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
+                            Model model) {
+        User user = userMapper.selectByPrimaryKey(Long.parseLong(id));
         if (action.equals("editEmail")) {
             //修改邮箱
             if (user.getEmail().equals(newEmail)) {
@@ -145,7 +162,7 @@ public class InformationController {
                                @RequestParam("action") String action,
                                Model model,
                                HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
+        User user = userMapper.selectByPrimaryKey(Long.parseLong(id));
         if (action.equals("editPassword")) {
             //修改邮箱
             if (inputNewPassword == null || inputNewPassword.equals("") || confirmNewPassword == null || confirmNewPassword.equals("")) {
@@ -169,6 +186,7 @@ public class InformationController {
             User newUser = new User();
             newUser.setId(user.getId());
             newUser.setPassword(confirmNewPassword);
+            newUser.setGmtModified(System.currentTimeMillis());
             int i = userMapper.updateByPrimaryKeySelective(newUser);
             if (i == 0) {
                 model.addAttribute("error", "密码修改失败");
@@ -176,6 +194,36 @@ public class InformationController {
                 informationService.searchInformation(model, user);
                 return "information";
             }
+        }
+        return "redirect:/information/" + id;
+    }
+
+    @PostMapping("/information/{id}/editSpecialtyClass")
+    public String editSpecialtyClass(@PathVariable String id,
+                                     @RequestParam("newSpecialty") String specialty,
+                                     @RequestParam("newStudentClass") String studentClass,
+                                     @RequestParam("action") String action,
+                                     Model model) {
+        User user = new User();
+        if (action.equals("editSpecialtyClass")) {
+            if (specialty == null || specialty.equals("")) {
+                model.addAttribute("error", "请选择专业");
+                return "information";
+            }
+            if (studentClass == null || studentClass.equals("")) {
+                model.addAttribute("error", "请选择班级");
+                return "information";
+            }
+            if (studentClass.equals("teacher")) {
+                user.setRole(UserRoleEnum.TEACHER.getType());
+                user.setBelongToId(Long.parseLong(specialty));
+            } else {
+                user.setRole(UserRoleEnum.STUDENT.getType());
+                user.setBelongToId(Long.parseLong(studentClass));
+            }
+            user.setId(Long.parseLong(id));
+            user.setGmtModified(System.currentTimeMillis());
+            userMapper.updateByPrimaryKeySelective(user);
         }
         return "redirect:/information/" + id;
     }

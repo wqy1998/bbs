@@ -36,6 +36,16 @@
                         <ul class="dropdown-menu">
                             <li><a href="/profile/questions">我的问题</a></li>
                             <li><a th:href="@{'/information/' + ${session.user.id}}">个人资料</a></li>
+                            <li th:if="${session.user.role == 0 || session.user.role == 2}" role="separator" class="divider"></li>
+                            <li th:if="${session.user.role == 0 || session.user.role == 2}">
+                                <a href="/manage/users">用户管理</a>
+                            </li>
+                            <li th:if="${session.user.role == 0 || session.user.role == 2}">
+                                <a href="/manage/questions">问题管理</a>
+                            </li>
+                            <li th:if="${session.user.role == 0}">
+                                <a href="/manage/specialtyClass">专业班级管理</a>
+                            </li>
                             <li role="separator" class="divider"></li>
                             <li><a href="/logout">退出登录</a></li>
                         </ul>

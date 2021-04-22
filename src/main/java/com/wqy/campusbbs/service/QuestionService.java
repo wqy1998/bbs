@@ -3,14 +3,12 @@ package com.wqy.campusbbs.service;
 import com.wqy.campusbbs.dto.PaginationDTO;
 import com.wqy.campusbbs.dto.QuestionDTO;
 import com.wqy.campusbbs.dto.QuestionQueryDTO;
+import com.wqy.campusbbs.dto.UserDTO;
+import com.wqy.campusbbs.enums.UserRoleEnum;
 import com.wqy.campusbbs.exception.CustomizeErrorCode;
 import com.wqy.campusbbs.exception.CustomizeException;
-import com.wqy.campusbbs.mapper.QuestionExtMapper;
-import com.wqy.campusbbs.mapper.QuestionMapper;
-import com.wqy.campusbbs.mapper.UserMapper;
-import com.wqy.campusbbs.model.Question;
-import com.wqy.campusbbs.model.QuestionExample;
-import com.wqy.campusbbs.model.User;
+import com.wqy.campusbbs.mapper.*;
+import com.wqy.campusbbs.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +26,12 @@ public class QuestionService {
 
     @Autowired
     private QuestionExtMapper questionExtMapper;
+
+    @Autowired
+    private SpecialtyMapper specialtyMapper;
+
+    @Autowired
+    private StudentClassMapper studentClassMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -61,18 +65,7 @@ public class QuestionService {
         questionQueryDTO.setSize(size);
         questionQueryDTO.setPage(offset);
         List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
-
-        for (Question question : questions) {
-            User user = userMapper.selectByPrimaryKey(question.getCreator());
-            QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(question, questionDTO);
-            questionDTO.setUser(user);
-            questionDTOList.add(questionDTO);
-        }
-
-        paginationDTO.setData(questionDTOList);
-        return paginationDTO;
+        return getPaginationDTO(paginationDTO, questions);
     }
 
     public PaginationDTO list(Long userId, Integer page, Integer size) {
@@ -102,13 +95,42 @@ public class QuestionService {
         example1.createCriteria().andCreatorEqualTo(userId);
         example1.setOrderByClause("gmt_create desc");
         List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example1, new RowBounds(offset, size));
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        return getPaginationDTO(paginationDTO, questions);
+    }
 
+    private PaginationDTO getPaginationDTO(PaginationDTO paginationDTO, List<Question> questions) {
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);
-            questionDTO.setUser(user);
+            UserDTO userDTO = new UserDTO();
+            BeanUtils.copyProperties(user, userDTO);
+            if (user.getRole() == UserRoleEnum.STUDENT.getType()) {
+                userDTO.setRoleName(UserRoleEnum.STUDENT.getName());
+                StudentClass studentClass = studentClassMapper.selectByPrimaryKey(userDTO.getBelongToId());
+                userDTO.setStudentClass(studentClass);
+                Specialty specialty = specialtyMapper.selectByPrimaryKey(studentClass.getSpecialtyId());
+                userDTO.setSpecialty(specialty);
+            }
+            if (user.getRole() == UserRoleEnum.ADMINISTRATOR.getType()) {
+                userDTO.setRoleName(UserRoleEnum.ADMINISTRATOR.getName());
+                Specialty specialty = new Specialty();
+                specialty.setName("");
+                userDTO.setSpecialty(specialty);
+                StudentClass studentClass = new StudentClass();
+                studentClass.setClassName("");
+                userDTO.setStudentClass(studentClass);
+            }
+            if (user.getRole() == UserRoleEnum.TEACHER.getType()) {
+                userDTO.setRoleName(UserRoleEnum.TEACHER.getName());
+                Specialty specialty = specialtyMapper.selectByPrimaryKey(userDTO.getBelongToId());
+                userDTO.setSpecialty(specialty);
+                StudentClass studentClass = new StudentClass();
+                studentClass.setClassName("");
+                userDTO.setStudentClass(studentClass);
+            }
+            questionDTO.setUser(userDTO);
             questionDTOList.add(questionDTO);
         }
 
@@ -124,7 +146,24 @@ public class QuestionService {
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.selectByPrimaryKey(question.getCreator());
-        questionDTO.setUser(user);
+        UserDTO userDTO = new UserDTO();
+        BeanUtils.copyProperties(user, userDTO);
+        if (user.getRole() == UserRoleEnum.STUDENT.getType()) {
+            userDTO.setRoleName(UserRoleEnum.STUDENT.getName());
+            StudentClass studentClass = studentClassMapper.selectByPrimaryKey(userDTO.getBelongToId());
+            userDTO.setStudentClass(studentClass);
+            Specialty specialty = specialtyMapper.selectByPrimaryKey(studentClass.getSpecialtyId());
+            userDTO.setSpecialty(specialty);
+        }
+        if (user.getRole() == UserRoleEnum.ADMINISTRATOR.getType()) {
+            userDTO.setRoleName(UserRoleEnum.ADMINISTRATOR.getName());
+        }
+        if (user.getRole() == UserRoleEnum.TEACHER.getType()) {
+            userDTO.setRoleName(UserRoleEnum.TEACHER.getName());
+            Specialty specialty = specialtyMapper.selectByPrimaryKey(userDTO.getBelongToId());
+            userDTO.setSpecialty(specialty);
+        }
+        questionDTO.setUser(userDTO);
         return questionDTO;
     }
 

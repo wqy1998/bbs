@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" http-equiv="Content-Type" content="text/html">
+    <title th:text="${sectionName + ' - 校园论坛'}"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/bbs.css">
+    <script src="/js/jquery-3.5.1.min.js" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<div th:insert="navigation :: nav"></div>
+<div class="container-fluid main profile">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 left-part">
+            <h2><span th:text="${sectionName}"></span></h2>
+            <hr>
+            <!--问题管理-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'questions'}">
+                <div class="media" th:each="question : ${pagination.getData}">
+                    <div class="media-left">
+                        <a th:href="@{'/information/' + ${question.user.id}}">
+                            <img class="media-object img-rounded"
+                                 th:src="${question.user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a th:href="@{'/question/' + ${question.id}}" th:text="${question.title}"></a>
+                            <span th:text="${'（' + question.user.specialty.name + question.user.studentClass.className + ' ' + question.user.roleName + ' ' + question.user.name + '）'}"></span>
+                        </h4>
+                        <span th:if="${#strings.length(question.description) > 30}"
+                              th:text="${#strings.substring(question.description, 0,30) + ' ...'}"></span>
+                        <span th:if="${#strings.length(question.description) <= 30}"
+                              th:text="${question.description}"></span><br>
+                        <span class="text-desc">
+                            <span th:text="${question.commentCount}"></span> 个回复 · <span
+                                th:text="${question.viewCount}"></span> 次浏览 · <span
+                                th:text="${#dates.format(question.gmtCreate, 'yyyy-MM-dd HH:mm:ss')}"></span>&nbsp;
+                            <a th:href="@{'/publish/' + ${question.id}}" class="bbs-menu"
+                               th:if="${session.user != null && (session.user.role == 0 || session.user.role == 2)}">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑 </span>
+                            </a>
+                            <a th:href="@{'/question/' + ${question.id} + '/delete'}" class="bbs-menu"
+                               th:if="${session.user != null && (session.user.role == 0 || session.user.role == 2)}">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!--用户管理-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'users'}">
+                <div class="media" th:each="user : ${pagination.getData}">
+                    <div class="media-left">
+                        <a th:href="@{'/information/' + ${user.id}}">
+                            <img class="media-object img-rounded"
+                                 th:src="${user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <span th:text="${user.name + ' （' + user.specialty.name + user.studentClass.className + ' ' + user.roleName + '）'}"></span>
+                        </h4>
+                        <span class="text-desc">
+                            <a th:href="@{'/information/' + ${user.id}}" class="bbs-menu"
+                               th:if="${session.user != null && (session.user.role == 0 || session.user.role == 2)}">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑 </span>
+                            </a>
+                            <a th:href="@{'/information/' + ${user.id} + '/delete'}" class="bbs-menu"
+                               th:if="${session.user != null && (session.user.role == 0 || session.user.role == 2)}">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!--页码-->
+            <div th:if="${section == 'questions' || section == 'users'}">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                     th:if="${pagination != null && pagination.page != 0}">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li th:if="${pagination.showFirstPage}">
+                                <a th:href="@{'/profile/' + ${section}(page=1)}" aria-label="Previous">
+                                    <span aria-hidden="true">&lt;&lt;</span>
+                                </a>
+                            </li>
+                            <li th:if="${pagination.showPrevious}">
+                                <a th:href="@{'/profile/' + ${section}(page=${pagination.page - 1})}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&lt;</span>
+                                </a>
+                            </li>
+                            <li th:each="page : ${pagination.pages}"
+                                th:class="${pagination.page == page} ? 'active' : ''">
+                                <a th:href="@{'/profile/' + ${section}(page=${page})}" th:text="${page}"></a>
+                            </li>
+                            <li th:if="${pagination.showNext}">
+                                <a th:href="@{'/profile/' + ${section}(page=${pagination.page + 1})}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&gt;</span>
+                                </a>
+                            </li>
+                            <li th:if="${pagination.showEndPage}">
+                                <a th:href="@{'/profile/' + ${section}(page=${pagination.totalPage})}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&gt;&gt;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                     th:if="${pagination == null || pagination.page == 0}">
+                    暂无数据
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                 th:if="${section == 'specialtyClass' && session.user.role == 0}">
+                <div>
+                    <a href="/add/specialty">增加专业</a>
+                    <a href="/add/class">增加班级</a></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">专业及班级</div>
+                    <table class="table">
+                        <tr th:each="specialtyClass : ${specialtyClasses.entrySet()}">
+                            <td th:value="${specialtyClass.key.id}">
+                                <span th:text="${specialtyClass.key.name}"></span>
+                                <a th:href="@{'/manage/editSpecialty/' + ${specialtyClass.key.id}}">修改</a>
+                                <a th:href="@{'/manage/deleteSpecialty/' + ${specialtyClass.key.id}}">删除</a>
+                            </td>
+                            <td th:each="class : ${specialtyClass.value}">
+                                <span th:text="${class.className + ' '}"></span>
+                                <a th:href="@{'/manage/editClass/' + ${class.id}}">修改</a>
+                                <a th:href="@{'/manage/deleteClass/' + ${class.id}}">删除</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="list-group section">
+                <a href="/manage/questions"
+                   th:class="${section == 'questions'} ? 'active list-group-item' : 'list-group-item'">问题管理</a>
+                <a href="/manage/users"
+                   th:class="${section == 'users'} ? 'active list-group-item' : 'list-group-item'">用户管理</a>
+                <a href="/manage/specialtyClass" th:if="${session.user.role == 0}"
+                   th:class="${section == 'specialtyClass'} ? 'active list-group-item' : 'list-group-item'">专业班级管理</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

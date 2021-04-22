@@ -19,7 +19,6 @@
             let studentClassList = "";
             for (let i = 0; i < data.length; i++) {
                 const studentClasses = Object.entries(data[i]);
-                console.log(studentClasses[0][1][0].specialtyId)
                 if (studentClasses[0][1][0].specialtyId === studentClass) {
                     studentClassList = studentClasses[0][1];
                     break;
