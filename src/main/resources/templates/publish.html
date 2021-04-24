@@ -26,8 +26,8 @@
                     <input type="text" th:value="${title}" name="title" id="title" class="form-control"
                            placeholder="输入文章标题......" autocomplete="off">
                 </div>
+                <label for="description">问题描述：</label>
                 <div class="form-group" id="question-editor">
-                    <label for="description">问题描述：</label>
                     <textarea name="description" th:text="${description}" style="display: none" id="description"
                               class="form-control" cols="20" rows="18"></textarea>
                 </div>
@@ -37,6 +37,13 @@
                             width: "100%",
                             height: 350,
                             path: "/js/lib/",
+                            toolbarIcons: function () {
+                                return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase",
+                                    "h1", "h2", "h3", "h4", "h5", "h6", "|", "list-ul", "list-ol", "hr", "|", "link",
+                                    "reference-link", "code", "preformatted-text", "code-block", "table", "datetime",
+                                    "html-entities", "pagebreak", "goto-line", "watch", "preview", "fullscreen", "clear",
+                                    "search", "|", "help", "info"]
+                            },
                             delay: 0,
                             watch: false,
                             placeholder: "请输入问题描述",
@@ -85,6 +92,9 @@
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>问题发布指南</h3>
+            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字<br>
+            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
+            • 选择标签: 选择一个或者多个合适的标签，用逗号隔开<br>
         </div>
     </div>
 </div>

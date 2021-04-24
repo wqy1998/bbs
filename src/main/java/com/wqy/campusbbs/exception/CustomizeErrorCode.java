@@ -12,6 +12,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     NOTIFICATION_NOT_FOUND(2009, "消息不翼而飞了"),
     PUBLISH_USER_WRONG(2010, "您没有权限修改此问题"),
     USER_NOT_EXIST(2011, "该用户不存在"),
+    SPECIALTY_NOT_EXIST(2012, "该专业不存在"),
+    CLASS_NOT_EXIST(2013, "该班级不存在"),
     ;
 
     private Integer code;

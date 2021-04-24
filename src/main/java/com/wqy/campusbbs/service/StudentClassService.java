@@ -6,7 +6,7 @@ import com.wqy.campusbbs.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +19,13 @@ public class StudentClassService {
     private StudentClassMapper studentClassMapper;
 
     public Map<Specialty, List<StudentClass>> listMap() {
-        List<Specialty> specialties = specialtyMapper.selectByExample(new SpecialtyExample());
-        Map<Specialty, List<StudentClass>> map = new HashMap<>();
+        SpecialtyExample specialtyExample = new SpecialtyExample();
+        specialtyExample.setOrderByClause("id");
+        List<Specialty> specialties = specialtyMapper.selectByExample(specialtyExample);
+        Map<Specialty, List<StudentClass>> map = new LinkedHashMap<>();
         for (Specialty specialty : specialties) {
             StudentClassExample studentClassExample = new StudentClassExample();
+            studentClassExample.setOrderByClause("class_name");
             studentClassExample.createCriteria().andSpecialtyIdEqualTo(specialty.getId());
             List<StudentClass> studentClasses = studentClassMapper.selectByExample(studentClassExample);
             map.put(specialty, studentClasses);

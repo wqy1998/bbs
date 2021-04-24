@@ -99,7 +99,12 @@
             </nav>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>论坛公告</h3>
+            <h3>最热问题</h3>
+            <ul class="question-related">
+                <li th:each="question : ${hotQuestions}">
+                    <a th:href="@{'/question/' + ${question.id}}" th:text="${question.title}"></a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

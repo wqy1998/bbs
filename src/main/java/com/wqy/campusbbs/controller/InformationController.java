@@ -4,10 +4,7 @@ import com.wqy.campusbbs.enums.UserRoleEnum;
 import com.wqy.campusbbs.exception.CustomizeErrorCode;
 import com.wqy.campusbbs.exception.CustomizeException;
 import com.wqy.campusbbs.mapper.UserMapper;
-import com.wqy.campusbbs.model.Specialty;
-import com.wqy.campusbbs.model.StudentClass;
-import com.wqy.campusbbs.model.User;
-import com.wqy.campusbbs.model.UserExample;
+import com.wqy.campusbbs.model.*;
 import com.wqy.campusbbs.service.InformationService;
 import com.wqy.campusbbs.service.StudentClassService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +69,7 @@ public class InformationController {
     public String editName(@PathVariable String id,
                            @RequestParam("newName") String newName,
                            @RequestParam("action") String action,
-                           Model model,
-                           HttpServletRequest request) {
+                           Model model) {
         User user = userMapper.selectByPrimaryKey(Long.parseLong(id));
         if (action.equals("editUserName")) {
             //修改用户名
@@ -160,8 +156,7 @@ public class InformationController {
                                @RequestParam("inputNewPassword") String inputNewPassword,
                                @RequestParam("confirmNewPassword") String confirmNewPassword,
                                @RequestParam("action") String action,
-                               Model model,
-                               HttpServletRequest request) {
+                               Model model) {
         User user = userMapper.selectByPrimaryKey(Long.parseLong(id));
         if (action.equals("editPassword")) {
             //修改邮箱
