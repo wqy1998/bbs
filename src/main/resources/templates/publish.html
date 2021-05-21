@@ -17,16 +17,16 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 left-part">
-            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发起</h2>
+            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发布</h2>
             <hr>
             <form action="/publish" method="post">
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
-                    <label for="title">问题标题：</label>
+                    <label for="title">文章标题：</label>
                     <input type="text" th:value="${title}" name="title" id="title" class="form-control"
                            placeholder="输入文章标题......" autocomplete="off">
                 </div>
-                <label for="description">问题描述：</label>
+                <label for="description">文章内容：</label>
                 <div class="form-group" id="question-editor">
                     <textarea name="description" th:text="${description}" style="display: none" id="description"
                               class="form-control" cols="20" rows="18"></textarea>
@@ -46,7 +46,7 @@
                             },
                             delay: 0,
                             watch: false,
-                            placeholder: "请输入问题描述",
+                            placeholder: "请输入文章内容",
                             saveHTMLToTextarea: true
                         });
                     });
@@ -91,10 +91,9 @@
             </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>问题发布指南</h3>
-            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字<br>
-            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
-            • 选择标签: 选择一个或者多个合适的标签，用逗号隔开<br>
+            <h3>文章发布指南</h3>
+            • 文章标题: 请用精简的语言描述您发布的文章，不超过25字<br>
+            • 文章内容: 详细补充您的文章内容，并确保文章内容清晰直观<br>
         </div>
     </div>
 </div>

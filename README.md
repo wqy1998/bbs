@@ -24,22 +24,6 @@
 ```sql
 create table USER
 (
-    ID           INT auto_increment,
-    ACCOUNT_ID   VARCHAR(100),
-    NAME         VARCHAR(50),
-    TOKEN        CHAR(36),
-    GMT_CREATE   BIGINT,
-    GMT_MODIFIED BIGINT,
-    BIO          VARCHAR(256),
-    AVATAR_URL   VARCHAR(100),
-    constraint USER_PK
-        primary key (ID)
-);
-```
-
-```sql
-create table USER
-(
     ID           BIGINT auto_increment,
     ACCOUNT_ID   VARCHAR(100),
     NAME         VARCHAR(50),
@@ -96,6 +80,50 @@ create table NOTIFICATION
     NOTIFIER_NAME VARCHAR(100),
     OUTER_TITLE   VARCHAR(256),
     constraint NOTIFICATION_PK
+        primary key (ID)
+);
+```
+
+```sql
+create table QUESTION
+(
+    ID            BIGINT auto_increment,
+    TITLE         VARCHAR(50),
+    DESCRIPTION   TEXT,
+    GMT_CREATE    BIGINT,
+    GMT_MODIFIED  BIGINT,
+    CREATOR       BIGINT,
+    COMMENT_COUNT INT default 0,
+    VIEW_COUNT    INT default 0,
+    LIKE_COUNT    INT default 0,
+    TAG           VARCHAR(256),
+    constraint QUESTION_PK
+        primary key (ID)
+);
+```
+```sql
+create table SPECIALTY
+(
+    ID         BIGINT auto_increment,
+    NAME       VARCHAR(256) not null,
+    GMT_CREATE BIGINT,
+    constraint SPECIALTY_PK
+        primary key (ID)
+);
+
+create unique index SPECIALTY_NAME_UINDEX
+    on SPECIALTY (NAME);
+
+
+```
+```sql
+create table STUDENT_CLASS
+(
+    ID           BIGINT auto_increment,
+    SPECIALTY_ID BIGINT       not null,
+    CLASS_NAME   VARCHAR(256) not null,
+    GMT_CREATE   BIGINT,
+    constraint STUDENT_CLASS_PK
         primary key (ID)
 );
 ```

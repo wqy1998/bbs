@@ -18,13 +18,13 @@
             <div class="collapse navbar-collapse">
                 <form class="navbar-form navbar-left" action="/" method="get">
                     <div class="form-group">
-                        <input type="text" class="form-control" name="search" placeholder="搜索问题">
+                        <input type="text" class="form-control" name="search" placeholder="搜索文章">
                     </div>
                     <button type="submit" class="btn btn-default">搜索</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li th:if="${session.user != null}">
-                        <a href="/publish">提问</a>
+                        <a href="/publish">发布</a>
                     </li>
                     <li th:if="${session.user != null}">
                         <a href="/profile/replies">通知 <span class="badge" th:text="${session.unreadCount}"></span></a>
@@ -34,14 +34,14 @@
                            aria-expanded="false">
                             <span th:text="${session.user.name}"></span><span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/profile/questions">我的问题</a></li>
+                            <li><a href="/profile/questions">我的文章</a></li>
                             <li><a th:href="@{'/information/' + ${session.user.id}}">个人资料</a></li>
                             <li th:if="${session.user.role == 0 || session.user.role == 2}" role="separator" class="divider"></li>
                             <li th:if="${session.user.role == 0 || session.user.role == 2}">
                                 <a href="/manage/users">用户管理</a>
                             </li>
                             <li th:if="${session.user.role == 0 || session.user.role == 2}">
-                                <a href="/manage/questions">问题管理</a>
+                                <a href="/manage/questions">文章管理</a>
                             </li>
                             <li th:if="${session.user.role == 0}">
                                 <a href="/manage/specialtyClass">专业班级管理</a>
@@ -53,15 +53,8 @@
                     <li th:if="${session.user == null}">
                         <a href="/register">注册</a>
                     </li>
-                    <li class="dropdown" th:if="${session.user == null}">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">登录<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="https://github.com/login/oauth/authorize?client_id=81c8aaa325952af9c51c&redirect_uri=http://localhost:8887/callback&scope=user&state=1">gitHub登录</a>
-                            </li>
-                            <li><a href="/login">邮箱登录</a></li>
-                        </ul>
+                    <li th:if="${session.user == null}">
+                        <a href="/login">登录</a>
                     </li>
                 </ul>
             </div>

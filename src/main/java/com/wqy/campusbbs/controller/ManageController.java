@@ -63,7 +63,7 @@ public class ManageController {
             PaginationDTO pagination = questionService.list(search, page, size);
             model.addAttribute("pagination", pagination);
             model.addAttribute("section", "questions");
-            model.addAttribute("sectionName", "问题管理");
+            model.addAttribute("sectionName", "文章管理");
         } else if ("users".equals(action)) {
             PaginationDTO paginationDTO = userService.list(user, page, size);
             model.addAttribute("pagination", paginationDTO);

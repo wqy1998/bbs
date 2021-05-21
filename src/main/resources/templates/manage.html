@@ -230,10 +230,10 @@
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <div class="list-group section">
-                <a href="/manage/questions"
-                   th:class="${section == 'questions'} ? 'active list-group-item' : 'list-group-item'">问题管理</a>
                 <a href="/manage/users"
                    th:class="${section == 'users'} ? 'active list-group-item' : 'list-group-item'">用户管理</a>
+                <a href="/manage/questions"
+                th:class="${section == 'questions'} ? 'active list-group-item' : 'list-group-item'">文章管理</a>
                 <a href="/manage/specialtyClass" th:if="${session.user.role == 0}"
                    th:class="${section == 'specialtyClass' || section == 'edit'} ? 'active list-group-item' : 'list-group-item'">专业班级管理</a>
                 <a href="/manage/add/specialty" th:if="${session.user.role == 0}"
